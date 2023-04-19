@@ -7,21 +7,56 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/sb-admin-2")
 public class HomeController {
+    // Field DI
     @Autowired
     MemoService memoService;  // MemoService 인터페이스의 구현체를 필드 주입
 
     @GetMapping("/")
     public String goHome() {
-        return "/sb-admin-2/index";
+        return "/main/index";
     }
     @GetMapping("/buttons")
     public String goButtons(){
-        return "/sb-admin-2/buttons";
+        return "/main/buttons";
     }
     @GetMapping("/cards")
     public String goCards(){
-        return "/sb-admin-2/cards";
+        return "/main/cards";
+    }
+    @GetMapping("/colors")
+    public String goColors(){
+        return "/main/utilities-color";
+    }
+    @GetMapping("/borders")
+    public String goBorders(){
+        return "/main/utilities-border";
+    }
+    @GetMapping("/animations")
+    public String goAnimations(){
+        return "/main/utilities-animation";
+    }
+    @GetMapping("/others")
+    public String goOther(){
+        return "/main/utilities-other";
+    }
+
+
+    @GetMapping("/404pages")
+    public String go404Pages(){
+        return "/main/404";
+    }
+    @GetMapping("/blanks")
+    public String goBlanks(){
+        return "/main/blank";
+    }
+
+    @GetMapping("/charts")
+    public String goCharts(){
+        return "/main/charts";
+    }
+    @GetMapping("/tables")
+    public String goTables(){
+        return "/main/tables";
     }
 }
