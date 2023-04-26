@@ -113,7 +113,7 @@
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" href="logins">Login</a>
+                    <a class="collapse-item" href="/members/login">Login</a>
                     <a class="collapse-item" href="registers">Register</a>
                     <a class="collapse-item" href="forgot-passwords">Forgot Password</a>
                     <div class="collapse-divider"></div>
@@ -325,6 +325,7 @@
             <div class="topbar-divider d-none d-sm-block"></div>
 
             <!-- Nav Item - User Information -->
+            <div th:if="${session.mb != null}">
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -354,6 +355,7 @@
                     </a>
                 </div>
             </li>
+            </div>
 
         </ul>
 

@@ -1,30 +1,47 @@
 package idusw.springboot.boradthymleaf.controller;
 
-import ch.qos.logback.core.model.Model;
 import idusw.springboot.boradthymleaf.domain.Member;
 import idusw.springboot.boradthymleaf.repository.MemberRepository;
 import idusw.springboot.boradthymleaf.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/members")
 
 public class MemberController {
+    HttpSession session = null;
     // Constructor DI(Dependency Injection)
     MemberService memberService;
     public  MemberController(MemberService memberService){
         this.memberService = memberService;
     }
-    @GetMapping("/logins")
-    public String goLogins(){
-        return "/members/login";
-    } // view : template engine - thymeleaf .html
-
-    @PostMapping("/logins")
-    public String loginMember(){ // 로그인 처리 -> service ->repository -> service -> controller
+    @GetMapping("/login")
+    public String getLoginform(Model model) {
+        model.addAttribute("member", Member.builder().build()); // email / pw 전달을 위한 객체
+        return "/members/login"; // view : template engine - thymeleaf .html
+    }
+    @PostMapping("/login")
+    public String loginMember(@ModelAttribute("member") Member member, HttpServletRequest request, Model model) {
+        // 로그인 처리 -> service -> repository -> service -> controller
+        Member result = null;
+        if((result = memberService.login(member)) != null ) {// 정상적으로 레코드의 변화가 발생하는 경우 영향받는 레코드 수를 반환
+            session = request.getSession();
+            session.setAttribute("mb", result);
+            return "redirect:/";
+        }
+        else
+            return "/main/error";
+    }
+    @PostMapping("/logout")
+    public String  logoutMember(){
+        session.invalidate();
         return "redirect:/";
     }
+
     @GetMapping("/register")
     public String getRegisterForm(Model model){ // form 요청 -> view (template engine)
         model.addAttribute("member",Member.builder().build());
@@ -33,7 +50,7 @@ public class MemberController {
     @PostMapping("/register") // 등록 처리 -> service -> repository -> service -> controller
     public String createMember(@ModelAttribute("member") Member member, Model model){
         System.out.println("this");
-        member.setSeq(1L);
+
         if(memberService.create(member) > 0){
         return "redirect:/";
         }
@@ -41,7 +58,17 @@ public class MemberController {
             return "/main/error";
         }
     }
-
+    @GetMapping("/{seq}")
+    public String getMember(@PathVariable("seq") Long seq, Model model ){
+        Member result = new Member(); // 반환
+        Member argument = new Member(); // 매개변수로 전달
+        argument.setSeq(seq);
+        result = memberService.read(argument);
+        // MemberService가 JpaRepository에게 전달
+        // MemberRepository는 JpaRepository 인터페이스의 구현체를 활용할 수 있음
+        model.addAttribute("member",result);
+        return "/members/detail";
+    }
     @GetMapping("/update")
     public String getUpdateform(){ // form 요청 -> view (template engine)
         return "/members/update";
