@@ -35,7 +35,7 @@ public class MemberController {
             return "redirect:/";
         }
         else
-            return "/main/error";
+            return "/errors/404";
     }
     @GetMapping("/logout")
     public String logoutMember() {
