@@ -200,8 +200,21 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <ul>
+                                <li th:if="${result.prev}">
+                                    <a th:href="">prev</a>
+                                </li>
+                                <li th:class="'page-item' + ${result.page == page? 'active':''}"
+                                    th:each="page : ${result.pageList}">
+                                    <a th:href="">[[${page}]] </a>
+                                </li>
+                                <li th:if="${result.next}">
+                                    <a th:href="">next</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
+
                 </div>
 
             </div>
@@ -232,10 +245,26 @@
 </a>
 
 <!-- Logout Modal-->
-<div th:replace="~{/main/main-fragment :: logout-modal}"></div>
-
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="../members/login.html">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Bootstrap core JavaScript-->
-<div th:replace="~{/main/main-fragment :: footer}"></div>
+<div th:replace="~{/main/main-fragment :: bottom}"></div>
 
 <!-- Page level plugins -->
 <script src="/vendor/datatables/jquery.dataTables.min.js"></script>

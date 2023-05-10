@@ -1,6 +1,9 @@
 package idusw.springboot.boradthymleaf.controller;
 
 import idusw.springboot.boradthymleaf.domain.Member;
+import idusw.springboot.boradthymleaf.domain.PageRequestDTO;
+import idusw.springboot.boradthymleaf.domain.PageResultDTO;
+import idusw.springboot.boradthymleaf.entity.MemberEntity;
 import idusw.springboot.boradthymleaf.repository.MemberRepository;
 import idusw.springboot.boradthymleaf.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,12 +45,15 @@ public class MemberController {
         session.invalidate();
         return "redirect:/";
     }
-    @GetMapping("/list")
-    public String listMember2(Model model) {
-        List<Member> result = null;
-        if((result = memberService.readList()) != null) {
-            model.addAttribute("list", result);
-            return "/members/list2";
+    @GetMapping("/list/{pn}/{size}")
+    public String listMember2(@PathVariable("pn")int pn, @PathVariable("size")int size, Model model) {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(10).size(3).build();
+        PageResultDTO<Member, MemberEntity> resultDTO = memberService.getList(pageRequestDTO);
+
+        if((resultDTO) != null) {
+            model.addAttribute("list", resultDTO.getDtoList()); // record
+            model.addAttribute("result", resultDTO); // page number list
+            return "/members/list";
         }
         else
             return "/errors/404";

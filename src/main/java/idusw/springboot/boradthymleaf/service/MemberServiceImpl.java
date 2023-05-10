@@ -1,12 +1,18 @@
 package idusw.springboot.boradthymleaf.service;
 
 import idusw.springboot.boradthymleaf.domain.Member;
+import idusw.springboot.boradthymleaf.domain.PageRequestDTO;
+import idusw.springboot.boradthymleaf.domain.PageResultDTO;
 import idusw.springboot.boradthymleaf.entity.MemberEntity;
 import idusw.springboot.boradthymleaf.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 public class MemberServiceImpl implements MemberService { // 구현체
@@ -96,5 +102,15 @@ public class MemberServiceImpl implements MemberService { // 구현체
             result.setName(e.getName());
         }
         return result;
+    }
+
+    @Override
+    public PageResultDTO<Member, MemberEntity> getList(PageRequestDTO requestDTO) {
+        Pageable pageable = requestDTO.getPageable(Sort.by("seq").ascending());
+
+        Page<MemberEntity> result = memberRepository.findAll(pageable);
+        Function<MemberEntity, Member> fn = (entity -> entityToDto(entity));
+
+        return new PageResultDTO<>(result, fn);
     }
 }
